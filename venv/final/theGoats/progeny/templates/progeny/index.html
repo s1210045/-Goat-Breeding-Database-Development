@@ -1,0 +1,105 @@
+{%extends 'progeny/base.html'%}
+{%block title %} Welcome to the Progeny Report {%endblock%}
+{%block css %}
+<style>
+    * {
+        box-sizing:border-box;
+        padding:0px;
+        margin:0px;
+    }
+    body {
+        background-color: cornflowerblue;
+        font-family: Arial, sans-serif;
+    }
+    table {
+        width: 100%;
+        border:1px solid black;
+    }
+    tr {
+        ;
+    }
+    td {
+        text-align: center;
+        font-family: Arial, sans-serif;
+        border:1px solid black;
+    }
+    .dam {
+        background-color:lightblue;
+        scroll-margin-top:56px;
+    }
+    .kid {
+        background-color:white;
+    }
+    h1 {
+        text-align: center;
+        font-size: 60px;
+    }
+    .kidHeader {
+        background-color: #8af9ff;
+    }
+</style>
+    
+{%endblock%}
+{%block content%}
+    <table>
+        <p id = 'text'></p>
+    {% for dam in dams%}
+        <tr>
+        {%for colname in colnames %}
+        <td>{{colname}}</td>
+        {%endfor%}
+        <td>winter_weights</td>
+        <td>sale weight</td>
+        </tr>
+        <tr id = {{dam.2}} class='dam' onclick='showkids({{dam.2}})'>
+        {%for v in dam%}
+            <td>{{v}}</td>
+        {%endfor%}
+        <td>
+            {%for v in dam|dict_of_list:0|dict_key:dam2%}
+                {{v.1}}/{{v.2}}: {{v.0}}<br>
+            {%endfor%}
+        </td>
+        <td>{{dam|dict_of_list:0|dict_key:sws|dict_of_list:2}}</td>
+        </tr>
+        <tr class="{{dam.2}}kid kidHeader" style='display:none'>{%for colname in colnames %}
+            {% if colname != 'num_kids' %}
+            <td >{{colname}}</td>
+            {%else %}
+            <td>num_sibs</td>
+            {%endif%}
+            {%endfor%} 
+            <td>winter_weights</td><td>sale weight</td></tr>
+        {%for kid in dam|dict_of_list:2|dict_key:dk%}
+        <tr id="{{dam.2}}{{kid.2}}" class="{{dam.2}}kid kid" style='display:none' onclick='iskiddam({{kid.2}})'>
+            {%for v in kid%}
+            <td>{{v}}</td>
+            {%endfor%}
+            <td>
+            {%for v in kid|dict_of_list:0|dict_key:dam2%}
+                {{v.1}}/{{v.2}}:{{v.0}}<br>
+            {%endfor%}
+            </td>
+            <td>{{kid|dict_of_list:0|dict_key:sws|dict_of_list:2}}</td>
+        </tr>
+        {%endfor%}
+    {%endfor%}
+
+    </table>
+    <script>
+        function showkids(dam) {
+            var listKids = document.getElementsByClassName(dam+'kid');
+            document.getElementById(dam).scrollIntoView({behavior:'smooth'});
+            
+            for (var i = 0; i < listKids.length;i++){
+                listKids[i].style.display=(listKids[i].style.display=='none'?'table-row':'none');
+            }
+        }
+        function iskiddam(kid) {
+            element = document.getElementById(kid)
+            if (typeof(element)!='undefined' && element!=null) {
+                showkids(kid);
+            }
+        }
+    </script> 
+{%endblock%}

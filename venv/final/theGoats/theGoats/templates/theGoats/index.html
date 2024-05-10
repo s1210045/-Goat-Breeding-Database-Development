@@ -1,0 +1,47 @@
+
+{%extends 'theGoats/base.html'%}
+{%load dict_key %}
+{%load dict_of_list%}
+{%block title %} Welcome to the Goats Database {%endblock%}
+{%block css %}
+<style>
+    body {
+        {% comment %} display:flex;We do not need {% endcomment %}
+        background-color: cornflowerblue;
+        align-items:center;
+    }
+    #container {
+        width:100%;
+        display:flex;
+        justify-content:space-around;
+    }
+    .reportCard {
+        width:33%;
+        height:200px;
+        background-color: lightblue;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    h1 {
+        text-align: center;
+    }
+</style>
+{%endblock%}
+{%block content%}
+    <h1>Welcome to our Database</h1><br>
+    <div id='container'>
+    {% for name,link in links.items %}
+        
+        <div class='reportCard'>
+            
+            <a href='{% url link %}'>
+                {{name}}:<br>
+                {{ link|dict_key:desc }}
+            </a>
+            <br>
+        </div>
+    {% endfor %}
+    </div>
+{%endblock%}

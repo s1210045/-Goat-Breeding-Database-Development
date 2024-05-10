@@ -1,0 +1,74 @@
+{%extends 'seasons/base.html'%}
+{%block title %} Welcome to the Birth season Cohort Report {%endblock%}
+{%block css %}
+{% comment %} comment {% endcomment %}
+<style>
+    body {
+        background-color: cornflowerblue;
+        padding:0;
+        margin:0;
+        font-family: Arial, sans-serif;
+    }
+	table, th, td {
+        border: 1px solid black;
+		text-align: center;
+        
+	}
+    table {
+        width: 100%;
+        
+    }
+	.month {
+		background-color: white;
+	}
+    caption {
+        font-size: 1.5em;
+        padding: 10px;
+    }
+	.season {
+		background-color: lightblue;
+        {% comment %} background-color:  #8af9ff; {% endcomment %}
+	}
+    h1 {
+        text-align: center;
+    }
+    
+</style>
+{%endblock%}
+{%block scripts%}
+    function showMonths(season) {
+        var list = document.getElementsByClassName(season)
+        for (var i = 0; i < list.length; i++) {
+            list[i].style.display = (list[i].style.display=='table-row'?'None':'table-row')
+        }
+    }
+{%endblock%}
+{%block content%}
+<h1>Seasonal Birth Cohort Report</h1>
+<table>
+        <tr>
+            <th>Season:</th>
+            <th>Month:</th>
+            <th>Average adg:</th>
+            <th># Births</th>
+        </tr> 
+{% for season in s %}
+<tr class = 'season' onclick='showMonths("{{season.0}}")'>
+    {%for attr in season%}
+        <td>{{attr}}</td>
+    {%endfor%}
+</tr>
+    {%for month in m%}
+        {%if month.0 == season.0%}
+        <tr class = '{{month.0}} month' style='display:none'>
+            {%for attr in month%}
+                
+                    <td> {{attr}} </td>
+                
+            {%endfor%}
+        </tr>
+        {%endif%}
+    {%endfor%}
+{% endfor %}
+</table>
+{%endblock%}

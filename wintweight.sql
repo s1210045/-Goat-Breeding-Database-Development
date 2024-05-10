@@ -1,0 +1,1 @@
+create or replace view winterweights as select * from weight where extract(month from when_measured) = 11 or extract(month from when_measured) = 12 or extract(month from when_measured) = 1;

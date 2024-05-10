@@ -1,0 +1,156 @@
+Script started on 2024-04-09 00:48:40-04:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="158" LINES="42"]
+]0;lion@roscoe:~/project-group03[?2004h[01;32m[lion@roscoe[01;37m project-group03[01;32m]$[00m createdb goats
+]0;lion@roscoe:~/project-group03[?2004h[01;32m[lion@roscoe[01;37m project-group03[01;32m]$[00m psql goats
+[?2004l
+
+psql (16.1)
+Type "help" for help.
+
+[?2004hgoats=# \i ddl.sql;
+[?2004l
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+COPY 8382
+COPY 55120
+COPY 340367
+COPY 1019
+DROP TABLE
+SELECT 8382
+DROP TABLE
+SELECT 8188
+DROP TABLE
+SELECT 60158
+DROP TABLE
+psql:ddl.sql:102: NOTICE:  view "dams" will be a temporary view
+CREATE VIEW
+SELECT 1390
+DROP TABLE
+DROP VIEW
+SELECT 8382
+psql:ddl.sql:108: NOTICE:  drop cascades to constraint season_month_season_fkey on table season_month
+DROP TABLE
+CREATE TABLE
+DROP TABLE
+CREATE TABLE
+DROP TABLE
+DROP TABLE
+DROP TABLE
+DROP TABLE
+[?2004hgoats=# \i dmlDBPopulate.sql;
+[?2004l
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+[?2004hgoats=# \i views.sql;
+[?2004l
+CREATE VIEW
+CREATE VIEW
+CREATE VIEW
+CREATE VIEW
+CREATE VIEW
+CREATE VIEW
+CREATE VIEW
+CREATE VIEW
+[?2004hgoats=# select count(*) from dams;
+[?2004l
+ count 
+-------
+  1390
+(1 row)
+
+[?2004hgoats=# select count(*) from nk;
+[?2004l
+ count 
+-------
+  1390
+(1 row)
+
+[?2004hgoats=# select count(*) from damwnk;
+[?2004l
+ count 
+-------
+  1390
+(1 row)
+
+[?2004hgoats=# select (count(*) from kids;
+[?2004l
+ count 
+-------
+  7779
+(1 row)
+
+[?2004hgoats=# select count(*) from kidwns;
+[?2004l
+ count 
+-------
+  7779
+(1 row)
+
+[?2004hgoats=# select count(*) from damwbw;
+[?2004l
+ count 
+-------
+  1331
+(1 row)
+
+[?2004hgoats=# select count(*) from kidwbw;
+[?2004l
+ count 
+-------
+  7672
+(1 row)
+
+[?2004hgoats=# select * from damwbw limit 10;
+[?2004l
+ animal_id |      rfid       |  tag  |         dob         |  dam  | sire  | num_kids | birth_weight 
+-----------+-----------------+-------+---------------------+-------+-------+----------+--------------
+      2256 | 964001009987308 | 15154 | 2015-03-25 00:00:00 | 9004  | 16288 |        9 | 5.1
+      2318 | 964001009987442 | 15104 | 2015-03-16 00:00:00 | 12001 |       |        4 | 9.0
+      2346 | 964001009987310 | 15170 | 2015-03-25 00:00:00 | 12021 | 9029  |        9 | 6.7
+      2349 | 964001009986988 | 14141 | 2014-04-15 00:00:00 | 12022 |       |       13 | 16.5
+      2355 | 964001015704286 | 14035 | 2014-03-24 00:00:00 | 12026 |       |        6 | 6.6
+      2381 | 964001009986834 | 14037 | 2014-03-28 00:00:00 | 12046 |       |        1 | 9.0
+      2400 | 964001009987270 | 15068 | 2015-03-13 00:00:00 | 12058 |       |       13 | 9.0
+      2466 | 964001009987150 | 15143 | 2015-03-17 00:00:00 | 12106 |       |        5 | 11.0
+      1876 | 964001009986918 | 9010  | 2011-04-03 00:00:00 |       |       |       11 | 0.0
+      1877 | 964001009986685 | 10007 | 2011-02-01 00:00:00 |       |       |       12 | 0.0
+(10 rows)
+
+[?2004hgoats=# select * from kidwbw limit 10;
+[?2004l
+ animal_id |      rfid       |  tag   |         dob         |  dam  | sire | num_sibs | birth_weight 
+-----------+-----------------+--------+---------------------+-------+------+----------+--------------
+      2217 | 964001009987048 | OR0331 | 2014-04-03 00:00:00 | 10001 |      |        8 | 8.4
+      2226 | 964001009987011 | OR0353 | 2014-03-28 00:00:00 | 11023 |      |       12 | 7.5
+      2227 | 964001009986897 | OR0271 | 2014-04-18 00:00:00 | 10007 |      |       12 | 9.5
+      2229 | 964001009987090 | OR0310 | 2014-04-06 00:00:00 | 10008 |      |        7 | 7.0
+      2230 | 964001009987097 | OR0336 | 2014-04-06 00:00:00 | 10008 |      |        7 | 8.1
+      2232 | 964001009986904 | OR0264 | 2014-04-28 00:00:00 | 10009 |      |       10 | 10.1
+      2233 | 964001009987073 | OR0318 | 2014-04-28 00:00:00 | 10009 |      |       10 | 11.0
+      2236 | 964001009987028 | OR0357 | 2014-04-03 00:00:00 | 10011 |      |        9 | 9.2
+      2237 | 964001009987068 | OR0313 | 2014-04-14 00:00:00 | 10016 |      |        7 | 7.7
+      2238 | 964001009986790 | OR0250 | 2014-04-14 00:00:00 | 10016 |      |        7 | 7.7
+(10 rows)
+
+[?2004hgoats=#\q
+[?2004l
+]0;lion@roscoe:~/project-group03[?2004h[01;32m[lion@roscoe[01;37m project-group03[01;32m]$[00m exit
+[?2004l
+exit
+
+Script done on 2024-04-09 00:53:34-04:00 [COMMAND_EXIT_CODE="0"]

@@ -1,0 +1,258 @@
+-- build tables and import the data from csv files
+\i ddl.sql;
+CREATE temporary TABLE Animal (
+animal_id integer primary key,
+lrid integer NOT NULL default 0,
+tag varchar(16) NOT NULL default '',
+rfid varchar(15) NOT NULL default '',
+nlis varchar(16) NOT NULL default '',
+is_new integer NOT NULL default 1,
+draft varchar(20) NOT NULL default '',
+sex varchar(20) NOT NULL default '',
+dob timestamp,
+sire varchar(16) NOT NULL default '',
+dam varchar(16) NOT NULL default '',
+breed varchar(20) NOT NULL default '',
+colour varchar(20) NOT NULL default '',
+weaned integer NOT NULL default 0 ,
+prev_tag varchar(10) NOT NULL default '',
+prev_pic varchar(20) NOT NULL default '',
+note varchar(30) NOT NULL default '',
+note_date timestamp,
+is_exported integer NOT NULL default 0,
+is_history integer NOT NULL default 0,
+is_deleted integer NOT NULL default 0,
+tag_sorter varchar(48) NOT NULL default '',
+donordam varchar(16) NOT NULL default '',
+whp timestamp,
+esi timestamp,
+status varchar(20) NOT NULL default '',
+status_date timestamp,
+overall_adg varchar(20) NOT NULL default '',
+current_adg varchar(20) NOT NULL default '',
+last_weight varchar(20) NOT NULL default '',
+last_weight_date timestamp,
+selected integer default 0,
+animal_group varchar(20) NOT NULL default '',
+current_farm varchar(20) NOT NULL default '',
+current_property varchar(20) NOT NULL default '',
+current_area varchar(20) NOT NULL default '',
+current_farm_date timestamp,
+current_property_date timestamp,
+current_area_date timestamp,
+animal_group_date timestamp,
+sex_date timestamp,
+breed_date timestamp,
+dob_date timestamp,
+colour_date timestamp,
+prev_pic_date timestamp,
+sire_date timestamp,
+dam_date timestamp,
+donordam_date timestamp,
+prev_tag_date timestamp,
+tag_date timestamp,
+rfid_date timestamp,
+nlis_date timestamp,
+modified timestamp,
+full_rfid varchar(16) default '',
+full_rfid_date timestamp);
+CREATE TABLE
+CREATE temporary  TABLE SessionAnimalActivity (
+session_id integer NOT NULL,
+animal_id integer NOT NULL,
+activity_code integer NOT NULL,
+when_measured timestamp NOT NULL,
+latestForSessionAnimal integer default 1,
+latestForAnimal integer default 1,
+is_history integer NOT NULL default 0,
+is_exported integer NOT NULL default 0,
+is_deleted integer default 0,
+primary key( session_id, animal_id, activity_code, when_measured ));
+CREATE TABLE
+CREATE temporary  TABLE SessionAnimalTrait (
+session_id integer NOT NULL,
+animal_id integer NOT NULL,
+trait_code integer NOT NULL,
+alpha_value varchar(20) NOT NULL default '',
+alpha_units varchar(10) NOT NULL default '',
+when_measured timestamp NOT NULL,
+latestForSessionAnimal integer default 1,
+latestForAnimal integer default 1,
+is_history integer NOT NULL default 0,
+is_exported integer NOT NULL default 0,
+is_deleted integer default 0,
+primary key(session_id, animal_id, trait_code, when_measured));
+CREATE TABLE
+CREATE temporary  TABLE PicklistValue (
+picklistvalue_id integer primary key,
+picklist_id integer,
+value varchar(30));
+CREATE TABLE
+-- read the CSV file into the table
+\copy Animal from 'Animal.csv' with DELIMITER ',' CSV HEADER;
+COPY 8382
+-- read the CSV file into the table
+\copy SessionAnimalActivity from 'SessionAnimalActivity.csv' WITH DELIMITER ',' CSV HEADER;
+COPY 55120
+-- read the CSV file into the table
+\copy SessionAnimalTrait from 'SessionAnimalTrait.csv' WITH DELIMITER ',' CSV HEADER;
+COPY 340367
+-- read the CSV file into the table
+\copy PicklistValue from 'PicklistValue.csv' WITH DELIMITER ',' CSV HEADER;
+COPY 1019
+-- drop table goat cascade;
+Create table goat as select Animal_id, rfid, Tag, Dob, Dam, prev_tag sire from animal;
+SELECT 8382
+-- drop table birth_weight cascade;
+Create table birth_weight2 as select animal_id, alpha_value from sessionanimaltrait where trait_code = 357 and alpha_value<>'';
+SELECT 8188
+create table birth_weight as select animal_id, min(alpha_value) as alpha_value from birth_weight2 group by animal_id;
+SELECT 8082
+-- drop table weight cascade;
+Create table weight as select animal_id, alpha_value, when_measured from sessionanimaltrait where trait_code = 53;
+SELECT 60158
+update weight set alpha_value = '0' where alpha_value = '';
+UPDATE 747
+-- drop table dam cascade;
+create or replace view dams as select distinct(dam) from animal;
+CREATE VIEW
+Create table dam as select goat.* from goat join dams on dams.dam = goat.tag;
+SELECT 1390
+-- drop table child;
+-- drop view dams cascade;
+Create table child as select animal_id, tag, dam from goat order by dam;
+SELECT 8382
+
+-- drop table Season CASCADE;
+Create table Season (season integer primary key, seasonName varchar(6) not null);
+CREATE TABLE
+-- drop table Season_Month;
+Create table Season_Month (
+	Month integer primary key,
+	Season integer references season
+);
+CREATE TABLE
+create table saledate as select Animal_id,status_date as saledate from animal where status ='Sold';
+SELECT 4572
+create or replace view lastweight as select animal_id, max(when_measured) as salesweight from weight group by animal_id;
+CREATE VIEW
+create or replace view salesweights as select l.animal_id, l.salesweight from lastweight as l inner join saledate as s on l.animal_id = s.animal_id;
+CREATE VIEW
+create or replace view sws as select s.*, w.alpha_value from salesweights as s inner join weight as w on s.animal_id = w.animal_id and s.salesweight=w.when_measured ;
+CREATE VIEW
+
+--drop table Animal;
+drop table PicklistValue;
+DROP TABLE
+drop table SessionAnimalActivity;
+DROP TABLE
+drop table SessionAnimalTrait;
+DROP TABLE
+-- populate the 'season' and 'season_month' date
+\i dmlDBPopulate.sql
+Insert into Season (season, seasonname) values(1,'Winter');
+INSERT 0 1
+Insert into Season (season, seasonName) values(2,'Spring');
+INSERT 0 1
+Insert into Season (season, seasonName) values(3,'Summer');
+INSERT 0 1
+Insert into Season (season, seasonName) values(4,'Fall');
+INSERT 0 1
+INSERT into Season_Month (month, season) values(1,1);
+INSERT 0 1
+INSERT into Season_Month (month, season) values(2,2);
+INSERT 0 1
+INSERT into Season_Month (Month, season) values(3,2);
+INSERT 0 1
+INSERT into Season_Month (Month, season) values(4,2);
+INSERT 0 1
+INSERT into Season_Month (Month, season) values(5,3);
+INSERT 0 1
+INSERT into Season_Month (Month, season) values(6,3);
+INSERT 0 1
+INSERT into Season_Month (Month, season) values(7,3);
+INSERT 0 1
+INSERT into Season_Month (Month, season) values(8,4);
+INSERT 0 1
+INSERT into Season_Month (Month, season) values(9,4);
+INSERT 0 1
+INSERT into Season_Month (Month, season) values(10,4);
+INSERT 0 1
+INSERT into Season_Month (Month, season) values(11,1);
+INSERT 0 1
+INSERT into Season_Month (Month, season) values(12,1);
+INSERT 0 1
+-- create views for goats 
+\i views.sql
+-- all commented lines have to do with wean weight, sale weight, or winter weights.
+-- waiting on guidance from stakeholder
+--Create or replace view winws as select * from winter_weight natural join weight order by weight.animal_id;
+--Create or replace view weanws as select * from wean_weight  natural join weight order by weight.animal_id;
+--Create or replace view sws as select * from sale_weight natural join weight order by weight.animal_id;
+-- drop view damtags cascade;
+
+drop view dams;
+DROP VIEW
+Create or replace view damtags as select distinct dam as tag from goat;
+CREATE VIEW
+Create or replace view dams as select a.* from goat as a natural join damtags as d; 
+CREATE VIEW
+Create or replace view kids as select a.* from goat as a inner join dams as d on a.dam = d.tag order by a.dam;
+CREATE VIEW
+Create or replace view nk as select dam, count(animal_id) as num_kids from kids group by dam;
+CREATE VIEW
+Create or replace view damwnk as select dams.*, nk.num_kids from dams inner join nk on dams.tag = nk.dam;
+CREATE VIEW
+Create or replace view kidwns as select kids.*, nk.num_kids as num_sibs from kids join nk on kids.dam = nk.dam;
+CREATE VIEW
+Create or replace view damwbw as select d.*, b.alpha_value as birth_weight from damwnk as d join birth_weight as b on d.animal_id = b.animal_id order by d.dob;
+CREATE VIEW
+Create or replace view kidwbw as select k.*, b.alpha_value as birth_weight from kidwns as k join birth_weight as b on k.animal_id = b.animal_id order by k.dob;
+CREATE VIEW
+create view bbm as select extract(month from dob) as month ,count(*) from goat group by month order by month;
+CREATE VIEW
+--Create or replace view damwweanw as select d.*, w.WValue from damwbw as d join weanws as w on d.animal_id = w.animal_id;
+--Create or replace view kidwweanw as select k.*, w.WValue from kidwbw as k join weanws as w on b.animal_id = w.animal_id;
+
+
+--Create or replace view damwsw as select d.*, s.WValue from damwweanw as d join sws as s on d.animal_id = s.animal_id;
+--Create or replace view kidwsw as select k.*, s.WValue from kidwweanw as k join winws as s on b.animal_id = s.animal_id;
+-- create view for weaning weights
+\i ww.sql
+create or replace view yob as select animal_id, extract(year from dob) as year, extract(month from dob) as month  from goat;
+CREATE VIEW
+create or replace view ww2 as select y.animal_id, w.alpha_value from yob as y join weight as w on (y.animal_id=w.animal_id) and (extract(year from w.when_measured)=y.year) and ((extract(month from w.when_measured) > y.month+2) and (extract(month from w.when_measured)<y.month+5)) and y.month<8;
+CREATE VIEW
+create or replace view ww as select animal_id, min(alpha_value) as alpha_value from ww2 group by animal_id;
+CREATE VIEW
+-- create view for winter weights
+\i wintweight.sql
+create or replace view winterweights as select * from weight where extract(month from when_measured) = 11 or extract(month from when_measured) = 12 or extract(month from when_measured) = 1;
+CREATE VIEW
+-- create psql function to convert a datetime to an integer (days since 0 ad)
+\i datetoint.sql
+CREATE OR REPLACE FUNCTION datetoint(input_date TIMESTAMP) 
+RETURNS INTEGER AS
+$$
+DECLARE
+    year_val INTEGER;
+    month_val INTEGER;
+    day_val INTEGER;
+    result INTEGER;
+BEGIN
+    -- Extracting year, month, and day from the input date
+    year_val := EXTRACT(YEAR FROM input_date);
+    month_val := EXTRACT(MONTH FROM input_date);
+    day_val := EXTRACT(DAY FROM input_date);
+    
+    -- Calculating the result
+    result := year_val * 365 + month_val * 30 + day_val;
+    
+    -- Returning the result
+    RETURN result;
+END;
+$$
+LANGUAGE plpgsql;
+CREATE FUNCTION
+-- exit psql
+\q
